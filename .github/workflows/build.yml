@@ -1,4 +1,3 @@
-name: ESP32 Build
 
 on:
   push:
@@ -11,20 +10,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Build ESP32 Firmware
-        uses: espressif/arduino-ci-action@v1
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          fqbn: esp32:esp32:esp32
-          sketch-path: src/main.cpp
+          python-version: "3.x"
+
+      - name: Install PlatformIO
+        run: pip install platformio
+
+      - name: Build ESP32
+        run: pio run
 
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
           name: ESP_RF_Nurse_Call-firmware
           path: |
-            **/*.bin
-            **/*.elf
-            **/*.map
+            .pio/build/esp32dev/firmware.bin
+            .pio/build/esp32dev/firmware.elf
