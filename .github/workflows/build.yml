@@ -1,0 +1,30 @@
+name: ESP32 Build
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build ESP32 Firmware
+        uses: espressif/arduino-ci-action@v1
+        with:
+          fqbn: esp32:esp32:esp32
+          sketch-path: src/main.cpp
+
+      - name: Upload firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: ESP_RF_Nurse_Call-firmware
+          path: |
+            **/*.bin
+            **/*.elf
+            **/*.map
